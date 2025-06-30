@@ -4,8 +4,8 @@ import (
 	"log"
 	"time"
 
-	"go-runtime-cover/pkg/coverage"
-	"go-runtime-cover/server"
+	"github.com/go-runtime-cover/example/server"
+	"github.com/go-runtime-cover/pkg/coverage"
 )
 
 func main() {
