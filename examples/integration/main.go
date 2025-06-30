@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/bagas-adi/go-runtime-cover/example/server"
+	"github.com/bagas-adi/go-runtime-cover/examples/server"
 )
 
 func main() {
