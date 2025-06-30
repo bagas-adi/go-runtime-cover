@@ -28,7 +28,7 @@ func fileLines(filename string) ([]string, error) {
 
 func main() {
 	// Parse command line arguments
-	importsToAdd := flag.String("pkg", "go-runtime-cover/pkg/coverage", "Packages to add")
+	importsToAdd := flag.String("pkg", "github.com/bagas-adi/go-runtime-cover/pkg/coverage", "Packages to add")
 	filename := flag.String("filename", "", "File to add imports to")
 	injectFile := flag.String("injectfile", "cmd/pkg_injector/snippets_sigterm.go", "File to inject after func main(){")
 

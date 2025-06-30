@@ -8,10 +8,8 @@ import (
 	"log"
 	"math/big"
 	"os"
-	"os/signal"
 	"path/filepath"
 	"runtime/coverage"
-	"syscall"
 	"time"
 )
 
@@ -123,20 +121,23 @@ func (d *Dumper) ClearCounters() error {
 	return nil
 }
 
-func (d *Dumper) SetSIGTERM(terminationDuration time.Duration) {
-	signalChan := make(chan os.Signal, 1)
-	// change SIGTERM with the other SIGNAL, or any other event like a creation of a file
-	signal.Notify(signalChan, os.Interrupt, syscall.SIGTERM)
-	termDuration := terminationDuration * time.Second
+func (d *Dumper) WatchForFileAndDumpCoverage(triggerFile string) {
 	go func() {
-		<-signalChan
-		d.Dump() // Final dump before exit
-		log.Printf("Terminate service in %v", termDuration.String())
-		time.Sleep(termDuration)
-		os.Exit(0)
+		for {
+			if _, err := os.Stat(triggerFile); err == nil {
+				// File exists, trigger coverage dump
+				if err := d.Dump(); err != nil {
+					log.Printf("Failed to dump coverage data: %v", err)
+				} else {
+					log.Println("Successfully dumped coverage data")
+				}
+				// Remove the trigger file after dumping
+				os.Remove(triggerFile)
+			}
+			time.Sleep(1 * time.Second)
+		}
 	}()
 }
-
 func (d *Dumper) PrintLog(err error) {
 	log.Printf("outputDir: %v", d.outputDir)
 	log.Printf("dumper: %v", d)
